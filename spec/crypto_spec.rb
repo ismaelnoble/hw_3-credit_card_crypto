@@ -7,7 +7,8 @@ require 'base64'
 
 describe 'Test card info encryption' do
   before do
-    @cc = CreditCard.new('4916603231464963', 'Mar-30-2020', 'Soumya Ray', 'Visa')
+    @cc = CreditCard.new('4916603231464963', 'Mar-30-2020',
+                         'Soumya Ray', 'Visa')
     @key = 3
   end
 
@@ -56,9 +57,7 @@ describe 'Test card info encryption' do
   describe 'Using ModernSymmetric Cipher' do
     it 'should generate new Base64 keys' do
       key = ModernSymmetricCipher.generate_new_key
-      (key =~ /^[A-Za-z0-9+\/]+={0,3}$/).nil?.must_equal false
-      puts key.length
-      (key.length % 4).must_equal 0
+      (key =~ %r{^[A-Za-z0-9+\/]+={0,3}$}).nil?.must_equal false
     end
 
     it 'should generate different keys each time' do
