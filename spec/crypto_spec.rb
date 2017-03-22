@@ -54,18 +54,33 @@ describe 'Test card info encryption' do
   end
 
   describe 'Using ModernSymmetric Cipher' do
-    it 'should encrypt card information' do
+    it 'should generate new Base64 keys' do
+      key = ModernSymmetricCipher.generate_new_key
+      key.must_instance_of Base64
+    end
+    it 'should generate different keys each time' do
+      key1 = ModernSymmetricCipher.generate_new_key
+      key2 = ModernSymmetricCipher.generate_new_key
+      key1.wont_equal key2
+    end
+    it 'should encrypt credit card objects' do
       @key = ModernSymmetricCipher.generate_new_key
       enc = ModernSymmetricCipher.encrypt(@cc.to_s, @key)
       enc.wont_equal @cc.to_s
       enc.wont_be_nil
     end
 
-    it 'should decrypt text' do
+    it 'should decrypt encrypted credit card objects' do
       @key = ModernSymmetricCipher.generate_new_key
       enc = ModernSymmetricCipher.encrypt(@cc.to_s, @key)
       dec = ModernSymmetricCipher.decrypt(enc, @key)
       dec.must_equal @cc.to_s
+    end
+
+    it 'should not replay the same encryption twice'
+      enc1 = ModernSymmetricCipher.encrypt(@cc.to_s, @key)
+      enc2 = ModernSymmetricCipher.encrypt(@cc.to_s, @key)
+      enc1.wont_equal enc2
     end
   end
 end
