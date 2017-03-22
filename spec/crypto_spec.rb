@@ -56,8 +56,9 @@ describe 'Test card info encryption' do
   describe 'Using ModernSymmetric Cipher' do
     it 'should generate new Base64 keys' do
       key = ModernSymmetricCipher.generate_new_key
-      # key = "hwllo u"
-      proc { Base64.decode64(key) }.must_be_silent 
+      (key =~ /^[A-Za-z0-9+\/]+={0,3}$/).nil?.must_equal false
+      puts key.length
+      (key.length % 4).must_equal 0
     end
 
     it 'should generate different keys each time' do
